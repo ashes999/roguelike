@@ -20,12 +20,11 @@ class PlayState extends FlxState
 		var rows:Int = Math.floor(Main.GAME_HEIGHT / FONT_SIZE); // Y
 		this.texts = [for (x in 0...columns) [for (y in 0...rows) createText(x, y, ".")]];
 		trace('Created a ${columns}x${rows} grid');
-		this.texts[20][5].text = "@";
 	}
 	
 	function createText(x:Float, y:Float, char:String)
 	{
-		var text = new FlxText(x * FONT_SIZE / 2, y * FONT_SIZE, char);
+		var text = new FlxText(x * FONT_SIZE / 2, y * FONT_SIZE, 0, char);
 		text.setFormat("assets/Inconsolata_Regular.ttf", FONT_SIZE, FlxColor.WHITE);
 		add(text);
 		return text;
@@ -42,13 +41,9 @@ class PlayState extends FlxState
 		{
 			for (text in row)
 			{
-				var len:Int = text.text.length;
-				for (i in 0 ... len)
-				{
-					var r = Std.int(Math.random() * validCharacters.length);
-					var char = validCharacters.charAt(r);
-					text.text = setChar(text.text, i, char);
-				}
+				var r = Std.int(Math.random() * validCharacters.length);
+				var char = validCharacters.charAt(r);
+				text.text = char;
 			}
 		}	
 
@@ -64,13 +59,5 @@ class PlayState extends FlxState
 			this.draws = 0;
 			trace('${fps} FPS');
 		}
-
-	}
-
-	private function setChar(str:String, pos:Int, char:String):String
-	{
-		var pre = str.substring(0, pos);
-		var post = str.substring(pos + 1);
-		return '${pre}${char}${post}';
 	}
 }
