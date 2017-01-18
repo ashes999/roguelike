@@ -7,27 +7,24 @@ import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
-	//private var texts:Array<Array<FlxText>>;
-	private var texts:Array<FlxText>;
+	//private var texts:Array<Array<FlxText>>; // 4FPS
+	//private var texts:Array<FlxText>; // 19FPS
+	private var text:FlxText;
 	private static inline var FONT_SIZE:Int = 24;
 	
 	private var draws:Int = 0;
 	private var lastFpsCheck = Date.now().getTime();
 
-
 	private var columns:Int = 0;
+	private var rows:Int = 0;
 
 	override public function create():Void
 	{
 		super.create();
 		this.columns = Math.floor(Main.GAME_WIDTH / (FONT_SIZE / 2)); // X
-		var rows:Int = Math.floor(Main.GAME_HEIGHT / FONT_SIZE); // Y
+		this.rows = Math.floor(Main.GAME_HEIGHT / FONT_SIZE); // Y
 		//this.texts = [for (x in 0...columns) [for (y in 0...rows) createText(x, y, ".")]];
-		this.texts = new Array<FlxText>();
-		for (i in 0 ... columns)
-		{
-			texts.push(createText(0, i, ""));
-		}
+		this.text = createText(0, 0, "hi");
 		trace('Created a ${columns}x${rows} grid');
 	}
 	
@@ -45,8 +42,21 @@ class PlayState extends FlxState
 		
 		// Redraw everything
 		var validCharacters = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-=+";
+		var final = "";
 
-		drawOneTextPerRow(validCharacters);
+		for (y in 0 ... rows)
+		{
+			var line = "";
+			for (x in 0 ... columns)
+			{
+				var r = Std.int(Math.random() * validCharacters.length);
+				var char = validCharacters.charAt(r);
+				line += char;
+			}
+			final += line + "\n";
+		}
+
+		this.text.text = final;
 
 		super.update(elapsed);
 
@@ -60,20 +70,5 @@ class PlayState extends FlxState
 			this.draws = 0;
 			trace('${fps} FPS');
 		}
-	}
-
-	private function drawOneTextPerRow(validCharacters:String):Void
-	{
-		for (row in this.texts)
-		{
-			var s = "";
-			for (i in 0 ... this.columns)
-			{
-				var r = Std.int(Math.random() * validCharacters.length);
-				var char = validCharacters.charAt(r);
-				s += char;
-			}
-			row.text = s;
-		}	
 	}
 }
