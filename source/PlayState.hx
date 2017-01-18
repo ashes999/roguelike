@@ -18,6 +18,8 @@ class PlayState extends FlxState
 	private var columns:Int = 0;
 	private var rows:Int = 0;
 
+	private var formats = new Array<FlxTextFormat>();
+
 	override public function create():Void
 	{
 		super.create();
@@ -26,6 +28,13 @@ class PlayState extends FlxState
 		//this.texts = [for (x in 0...columns) [for (y in 0...rows) createText(x, y, ".")]];
 		this.text = createText(0, 0, "hi");
 		trace('Created a ${columns}x${rows} grid');
+
+		this.formats.push(new FlxTextFormat(0xE6E600, false, false, null));
+		this.formats.push(new FlxTextFormat(0xFFAE5E, false, false, null));
+		this.formats.push(new FlxTextFormat(0x008040, false, false, null));
+		this.formats.push(new FlxTextFormat(0x0080C0, false, false, null));
+		this.formats.push(new FlxTextFormat(0x00E6E6, false, false, null));
+		this.formats.push(new FlxTextFormat(0x0080FF, false, false, null));
 	}
 	
 	function createText(x:Float, y:Float, char:String)
@@ -52,6 +61,11 @@ class PlayState extends FlxState
 				var r = Std.int(Math.random() * validCharacters.length);
 				var char = validCharacters.charAt(r);
 				line += char;
+
+				r = Std.int(Math.random() * formats.length);
+				var f = formats[r];
+				var i = (y * this.columns) + x;
+				this.text.addFormat(f, i, i + 1);
 			}
 			final += line + "\n";
 		}
